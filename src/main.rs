@@ -26,6 +26,8 @@ impl fmt::Display for Tile {
     }
 }
 
+mod render;
+
 fn main() {
     let width = 211;//640;
     let height = 57;//480;

@@ -17,7 +17,6 @@ fn start() {
         extensions: wgpu::Extensions {
             anisotropic_filtering: false,
         },
-        limits: wgpu::Limits::default(),
     });
     let mut events_loop = EventsLoop::new();
     let window = Window::new(&events_loop).unwrap();
@@ -28,6 +27,7 @@ fn start() {
         .to_physical(window.get_hidpi_factor);
     let surface = instance.create_surface(&window);
     let mut sc_desc = wgpu::SwapChainDescriptor {
-        usage: wgpu::resource::
+        usage: wgpu::TextureUsageFlags::OUTPUT_ATTACHMENT,
+        format: wgpu::TextureFormat::Bgra8Unorm,
     }
 }
