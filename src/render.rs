@@ -28,6 +28,38 @@ fn start() {
     let surface = instance.create_surface(&window);
     let mut sc_desc = wgpu::SwapChainDescriptor {
         usage: wgpu::TextureUsageFlags::OUTPUT_ATTACHMENT,
-        format: wgpu::TextureFormat::Bgra8Unorm,
+        format: wgpu::TextureFormat::Rgba8Unorm,
+        width: size.width.round() as u32,
+        height: size.height.round() as u32,
+    };
+    let mut swap_chain = device.create_swap_chain(&surface, &sc_desc);
+    let mut running = true;
+    while running {
+        events_loop.poll_events(|event| match event {
+            Event::WindowEvent {
+               event: WindowEvent::Resized(size),
+            } => {
+
+            },
+            Event::WindowEvent {event, ..} => match event {
+                WindowEvent::KeyboardInput {
+                    input: KeyboardInput {
+                        virtual_keycode: Some(VirtualKeyCode::Escape),
+                        state: ElementState::Pressed,
+                        ..
+                    },
+                    ..
+                }
+                | WindowEvent::CloseRequested => {
+                    running = false;
+                }
+                _ => {
+                    //something
+                }
+            },
+            _ => (),
+        });
+        let frame = swap_chain.get_next_texture();
+
     }
 }
