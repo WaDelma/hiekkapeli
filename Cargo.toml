@@ -6,5 +6,5 @@ edition = "2018"
 
 [dependencies]
 rayon = "1.0.3"
-wgpu = "0.2.3"
+wgpu = { version = "0.2.3", features=["vulkan"] }
 glsl-to-spirv = "0.1.7"

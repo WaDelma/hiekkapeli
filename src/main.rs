@@ -1,18 +1,12 @@
-use std::mem;
-use std::fmt;
-use rayon::prelude::*;
 
+use rayon::prelude::*;
+use std::fmt;
+use std::mem;
 #[derive(Clone, Copy, PartialEq, Hash, Debug)]
 enum Tile {
-    Air {
-        pressure: i8,
-    },
-    Sand {
-        humidity: u8,
-    },
-    Water {
-        pressure: i8,
-    }
+    Air { pressure: i8 },
+    Sand { humidity: u8 },
+    Water { pressure: i8 },
 }
 
 impl fmt::Display for Tile {
@@ -29,35 +23,22 @@ impl fmt::Display for Tile {
 mod render;
 
 fn main() {
-    let width = 211;//640;
-    let height = 57;//480;
+    render::start();
+    let width = 211; //640;
+    let height = 57; //480;
 
-    let index = |x: usize, y: usize| {
-        x * height + y
-    };
+    let index = |x: usize, y: usize| x * height + y;
 
-    let mut prev_buffer = vec![Tile::Air {
-        pressure: 0,
-    }; width * height];
-    let mut cur_buffer = vec![Tile::Air {
-        pressure: 0,
-    }; width * height];
+    let mut prev_buffer = vec![Tile::Air { pressure: 0 }; width * height];
+    let mut cur_buffer = vec![Tile::Air { pressure: 0 }; width * height];
 
     for x in 0..width {
-        prev_buffer[index(x, 0)] = Tile::Sand {
-            humidity: 0,
-        };
-        prev_buffer[index(x, height - 1)] = Tile::Water {
-            pressure: 0,
-        };
+        prev_buffer[index(x, 0)] = Tile::Sand { humidity: 0 };
+        prev_buffer[index(x, height - 1)] = Tile::Water { pressure: 0 };
     }
     for y in 0..height {
-        prev_buffer[index(0, y)] = Tile::Sand {
-            humidity: 0,
-        };
-        prev_buffer[index(width - 1, y)] = Tile::Water {
-            pressure: 0,
-        };
+        prev_buffer[index(0, y)] = Tile::Sand { humidity: 0 };
+        prev_buffer[index(width - 1, y)] = Tile::Water { pressure: 0 };
     }
     loop {
         // TODO: This allocation should be able to be reused
@@ -72,26 +53,14 @@ fn main() {
             for (y, t) in b.iter_mut().enumerate() {
                 use self::Tile::*;
                 match prev_buffer[index(x, y)] {
-                    Air {
-                        pressure
-                    } => {
-                        *t = Air {
-                            pressure
-                        };
+                    Air { pressure } => {
+                        *t = Air { pressure };
                     }
-                    Sand {
-                        humidity
-                    } => {
-                        *t = Sand {
-                            humidity
-                        };
+                    Sand { humidity } => {
+                        *t = Sand { humidity };
                     }
-                    Water {
-                        pressure
-                    } => {
-                        *t = Water {
-                            pressure
-                        };
+                    Water { pressure } => {
+                        *t = Water { pressure };
                     }
                 }
             }
